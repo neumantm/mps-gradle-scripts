@@ -57,7 +57,12 @@ task downloadGithubActionsScripts {
     group 'mps-gradle'
 
     doLast {
+        def pluginNameForBuild = project.name
         def languageNameForBuild = "MyLanguage"
+
+        if (project.hasProperty("pluginName")) {
+            pluginNameForBuild = project.pluginName
+        }
         if (project.hasProperty("languageName")) {
             languageNameForBuild = project.languageName
         }
@@ -71,7 +76,7 @@ task downloadGithubActionsScripts {
             }
             actionsFile.text = "### This file is downloaded from $url\n\n${actionsFile.text}"
             actionsFile.text = actionsFile.text
-                    .replaceAll("PROJECT_NAME: \"dummy-language\"", "PROJECT_NAME: \"$project.name\"")
+                    .replaceAll("PLUGIN_NAME: \"dummy-language\"", "PLUGIN_NAME: \"$pluginNameForBuild\"")
                     .replaceAll("LANGUAGE_NAME: \"MyDummyLanguage\"", "LANGUAGE_NAME: \"$languageNameForBuild\"")
             actionsFile.text = actionsFile.text.replaceAll("\r\n", "\n")
         }

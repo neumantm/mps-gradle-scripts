@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  PROJECT_NAME: "dummy-language"
+  PLUGIN_NAME: "dummy-language"
   LANGUAGE_NAME: "MyDummyLanguage"
 
 jobs:
@@ -47,4 +47,4 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            build/artifacts/${{ env.PROJECT_NAME }}/${{ env.LANGUAGE_NAME }}.zip
+            build/artifacts/${{ env.PLUGIN_NAME }}/${{ env.LANGUAGE_NAME }}.zip
