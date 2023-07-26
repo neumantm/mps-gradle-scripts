@@ -39,6 +39,10 @@ task mpsClean {
     dependsOn 'mpsAntClean', 'mpsAntCleanSources'
 }
 
+task clean {
+    dependsOn 'mpsClean'
+}
+
 task mpsTest {
     group 'mps'
     dependsOn 'mpsAntCheck', 'parseTestReportAfterAntCheck'
