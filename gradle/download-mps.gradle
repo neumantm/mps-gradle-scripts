@@ -36,18 +36,29 @@ if (isMac()) {
     targetFolderName = "$outputBundleDirectory/Contents"
 }
 
+@CacheableTask
+abstract class DownloadFileTask extends DefaultTask  {
+    @Input
+    abstract Property<String> getDownloadLink()
 
-task downloadMpsZip {
+    @OutputFile
+    abstract RegularFileProperty getDownloadTargetFile()
+
+    @TaskAction
+    void downloadFile() {
+        getDownloadTargetFile().get().asFile.parentFile.mkdirs()
+        println("downloading ${getDownloadLink().get()} ... (to ${getDownloadTargetFile().get().asFile})")
+        new URL(getDownloadLink().get()).withInputStream { downloadInputStream -> getDownloadTargetFile().get().asFile.withOutputStream { it << downloadInputStream } }
+    }
+}
+
+task downloadMpsZip(type: DownloadFileTask) {
     group 'mps-download'
     onlyIf {
         !mpsZipFile.exists()
     }
-    doLast {
-        mpsZipFile.parentFile.mkdirs()
-        def mpsDownloadLink = "https://download.jetbrains.com/mps/$mpsMajorMinorVersion/MPS-${mpsVersion}.zip"
-        println("downloading $mpsDownloadLink ... (might take few minutes, since it is ca. 400-500 MB)")
-        new URL(mpsDownloadLink).withInputStream { downloadInputStream -> mpsZipFile.withOutputStream { it << downloadInputStream } }
-    }
+    downloadLink = "https://download.jetbrains.com/mps/$mpsMajorMinorVersion/MPS-${mpsVersion}.zip"
+    downloadTargetFile = mpsZipFile
 }
 
 task downloadMpsPlugins {
@@ -249,7 +260,7 @@ private static String obtainUpdateIdForPlugin(String pluginName, int pluginId, S
     }
 }
 
-task downloadJbrForCurrentPlatform {
+task downloadJbrForCurrentPlatform(type: DownloadFileTask) {
     group 'mps-download'
 
     def currentOs = getOsJbrVariantName()
@@ -262,15 +273,11 @@ task downloadJbrForCurrentPlatform {
     onlyIf {
         !jbrTarGzFile.exists() && System.env.getOrDefault('PREINSTALLED_JAVA_PATH',"") == ""
     }
-    doLast {
-        def downloadLink = "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-${jbrVersion[0]}-${currentOs}-${jbrVersion[1]}.tar.gz"
-        if (!jbrTarGzFile.exists()) {
-            jbrTarGzFile.parentFile.mkdirs()
-            println("downloading $downloadLink ... (to $jbrTarGzFile)")
-            new URL(downloadLink).withInputStream { downloadInputStream -> jbrTarGzFile.withOutputStream { it << downloadInputStream } }
-        }
-    }
+
+    downloadLink = "https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-${jbrVersion[0]}-${currentOs}-${jbrVersion[1]}.tar.gz"
+    downloadTargetFile = jbrTarGzFile
 }
+
 
 task extractJbrToMpsBundle {
     group 'mps-download'
