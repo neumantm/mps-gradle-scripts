@@ -327,9 +327,6 @@ task copyOsSpecificBinFiles {
             }
             file("$targetFolderName/bin/Contents").deleteDir()
         }
-        file("$targetFolderName/bin/win").deleteDir()
-        file("$targetFolderName/bin/mac").deleteDir()
-        file("$targetFolderName/bin/linux").deleteDir()
 
         // workaround: MPS-35648
         if (mpsVersion == "2022.3") {
