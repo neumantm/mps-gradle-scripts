@@ -78,6 +78,10 @@ task downloadGithubActionsScripts {
             actionsFile.text = actionsFile.text
                     .replaceAll("PLUGIN_NAME: \"dummy-language\"", "PLUGIN_NAME: \"$pluginNameForBuild\"")
                     .replaceAll("LANGUAGE_NAME: \"MyDummyLanguage\"", "LANGUAGE_NAME: \"$languageNameForBuild\"")
+            if(project.hasProperty("githubActionsScripts_runsOn")) {
+                def runsOn = project.githubActionsScripts_runsOn
+                actionsFile.text = actionsFile.text.replaceAll("runs-on: ubuntu-latest", "runs-on: $runsOn")
+            }
             actionsFile.text = actionsFile.text.replaceAll("\r\n", "\n")
         }
     }
