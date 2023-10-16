@@ -1,6 +1,6 @@
 def scripts = ["download-mps.gradle", "run-mps-ant.gradle", "init-gradle-scripts.gradle"]
 
-def repositoryUrl = "https://github.com/vimotest/mps-gradle-scripts/raw/main"
+def repositoryUrl = "https://github.com/neumantm/mps-gradle-scripts/raw/main"
 
 if (project.hasProperty("gradleScriptsRepoUrl")) {
     repositoryUrl = project.gradleScriptsRepoUrl
