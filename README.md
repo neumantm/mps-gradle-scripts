@@ -41,6 +41,7 @@ It is intended to copy the related files into your own repo, or include them by 
   - this re-downloads the github-action scripts and replaces the placeholders
 * execute `gradlew mpsBuild`
   - this should build the archive "build/artifacts/\<projectName>/\<languageName>.zip" successfully
+* update `README.md`, `COPYRIGHT`, and potentially `LICENSE`
 
 ## Update gradle scripts
 
