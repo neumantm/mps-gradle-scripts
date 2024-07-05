@@ -32,7 +32,7 @@ It is intended to copy the related files into your own repo, or include them by 
       ```
       folder mps_home = ./build/mps-bundle/mps
       folder project_home = .
-      folder mps.macro.project_home = ./build/mps-bundle/mps
+      folder mps.macro.project_home = .
       ```
     * change the `zip` archive name of the `default layout` section to the language name (e.g. to `MySetupSampleLanguage.zip`)
       - this is necessary if language-name != project-name
