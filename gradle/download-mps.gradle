@@ -13,7 +13,10 @@ def jbrMappings = [
         "2022.1": "11_0_15-b2043.56",
         "2022.2": "17.0.5-b469.71",
         "2022.3": "17.0.6-b653.34",
-        "2023.1": "17.0.6-b829.9" ]
+        "2023.1": "17.0.10-b829.26",
+        "2023.2": "17.0.10-b1000.48",
+        "2023.3": "17.0.10-b1087.21",
+        "2024.1": "17.0.10-b1207.6" ]
 
 
 if (!project.hasProperty("mpsVersion")) {
@@ -329,7 +332,7 @@ task copyOsSpecificBinFiles {
         }
 
         // workaround: MPS-35648
-        if (mpsVersion == "2022.3") {
+        if (mpsVersion == "2022.3" || mpsVersion.takeBefore(".").toInteger() >= 2023) {
             def subDir = Os.isArch("aarch64") ? "aarch64" : "amd64"
             println("Workaround for UnsatisfiedLinkError with jnidispatch.dll: copying jna files from subdir $subDir to $targetFolderName/lib/jna")
             copy {

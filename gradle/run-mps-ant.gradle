@@ -12,7 +12,7 @@ ext.javaHome = getJavaHome()
 ext.antHome = "$mpsHome/lib/ant"
 
 def antLauncherJarPath = "$antHome/lib/ant-launcher.jar"
-def mpsUtilJarPath = concatJavaClasspath("$mpsHome/lib/util.jar", "$mpsHome/lib/3rd-party-rt.jar")
+def mpsUtilJarPath = getConcatenatedMpsUtilJarPaths()
 
 task mpsAntGenerate(type: Exec) {
     group 'mps-ant-wrapper'
@@ -46,7 +46,9 @@ task parseTestReportAfterAntCheck {
     }
     doLast {
         def anyTaskFailed = false
-        fileTree(dir: projectDir, includes: ["TEST-jetbrains.mps.testbench.junit.*.xml"]).each {
+        def mpsMajorVersion = mpsVersion.takeBefore(".")
+        def testFilePattern = mpsMajorVersion.toInteger() >= 2023 ? "TEST-junit-*.xml" : "TEST-jetbrains.mps.testbench.junit.*.xml"
+        fileTree(dir: projectDir, includes: [testFilePattern]).each {
             def testsuite = new XmlSlurper().parse(it)
             testsuite.testcase.each { testcase ->
                 def message = ""
@@ -144,4 +146,12 @@ task mpsOpenProjectInMpsForCurrentOs(type: Exec) {
     } else if (Os.isFamily(Os.FAMILY_UNIX)) {
         commandLine 'sh', 'build/mps-bundle/mps/bin/mps.sh', projectDir
     }
+}
+
+private String getConcatenatedMpsUtilJarPaths() {
+    def mpsMajorVersion = mpsVersion.takeBefore(".")
+    if (mpsMajorVersion.toInteger() >= 2023) {
+        return concatJavaClasspath("$mpsHome/lib/util-8.jar")
+    }
+    return concatJavaClasspath("$mpsHome/lib/util.jar", "$mpsHome/lib/3rd-party-rt.jar")
 }

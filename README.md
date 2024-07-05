@@ -50,6 +50,7 @@ It is intended to copy the related files into your own repo, or include them by 
   - `downloadGithubActionsScripts`: re-downloads the GitHub Actions files under `.github`
 * Note: ensure you commit before executing this tasks, since they overwrite the files
   - usually, you should not modify the base scripts at all
+* Note: ensure you are using a more recent Gradle version (min. Gradle 8.0.0). Check it in your gradle/wrapper/gradle-wrapper.properties
 
 ### Breaking changes
 
